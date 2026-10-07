@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WukongMM.App/WukongMM.App.csproj" />
+    <Project Path="src/WukongMM.Cli/WukongMM.Cli.csproj" />
+    <Project Path="src/WukongMM.Core/WukongMM.Core.csproj" />
+  </Folder>
+</Solution>

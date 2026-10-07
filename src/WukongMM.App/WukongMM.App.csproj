@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>WukongMM</AssemblyName>
+    <RootNamespace>WukongMM.App</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- WPF Fluent 主题 (ThemeMode) 在 .NET 9/10 仍标记为实验性 -->
+    <NoWarn>$(NoWarn);WPF0001</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    背景图与 exe 图标：
+    - Assets\background.jpg、Assets\app.ico：原创素材（tools\art\make-art.cs 生成），公开发布用，随仓库提交
+    - Assets\Official\：游戏官方美术（Steam 库主图、b1.exe 图标），只在开发者本机，不提交（.gitignore）
+    本机有 Official 素材时默认用它；发布公开版加 -p:PublicArt=true 强制用原创素材。
+  -->
+  <PropertyGroup>
+    <UseOfficialArt Condition="'$(PublicArt)' != 'true' And Exists('Assets\Official\background.jpg') And Exists('Assets\Official\app.ico')">true</UseOfficialArt>
+    <ApplicationIcon Condition="'$(UseOfficialArt)' == 'true'">Assets\Official\app.ico</ApplicationIcon>
+    <ApplicationIcon Condition="'$(UseOfficialArt)' != 'true'">Assets\app.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WukongMM.Core\WukongMM.Core.csproj" />
+  </ItemGroup>
+
+  <!-- 自带的游戏内导出 mod（先 dotnet build mods\WukongMMDataExport -c Release；构建它需要游戏程序集，见 mods\WukongMMDataExport\README.md）。
+       有就打包进 exe，"设置"页可一键安装 / 更新；没有时该按钮不可用 -->
+  <PropertyGroup>
+    <ExportModDll>$(MSBuildThisFileDirectory)..\..\mods\WukongMMDataExport\bin\Release\net472\WukongMMDataExport.dll</ExportModDll>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(ExportModDll)')">
+    <EmbeddedResource Include="$(ExportModDll)" LogicalName="WukongMMDataExport.dll" Link="Bundled\WukongMMDataExport.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseOfficialArt)' == 'true'">
+    <Resource Include="Assets\Official\background.jpg" Link="Assets\background.jpg" />
+    <Resource Include="Assets\Official\app.ico" Link="Assets\app.ico" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseOfficialArt)' != 'true'">
+    <Resource Include="Assets\background.jpg" />
+    <Resource Include="Assets\app.ico" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,199 @@
+﻿<UserControl x:Class="WukongMM.App.Views.SaveEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:WukongMM.App.Infrastructure">
+    <Grid Margin="4,14,4,4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="{l:Tr '存档修改', 'Save Editor'}" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource PageSubtitle}"
+                       Text="{l:Tr '修改当前存档里的等级、灵蕴、经验、灵光点和道具数量（道具只列出打造、炼丹、升级用的材料，以及丹药和种子）。修改前请完全退出游戏；每次写入前都会自动备份，可随时还原。', 'Edit level, Will, EXP, Sparks and item counts in the current save (only crafting, alchemy and upgrade materials, pills and seeds are listed). Quit the game completely first; every write is backed up automatically and can be restored at any time.'}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1">
+            <Border Style="{StaticResource InfoBanner}" Visibility="{Binding IsWritingDisabled, Converter={StaticResource BoolToVis}}">
+                <TextBlock TextWrapping="Wrap"
+                           Text="{l:Tr '存档写入功能暂时关闭：可以查看存档、试改数值并预览校验结果，但“保存到存档”按钮不可用，不会改动存档。', 'Writing saves is turned off for now: you can view the save, try values and preview the checks, but Save to file is unavailable and nothing is changed.'}" />
+            </Border>
+            <Border Style="{StaticResource WarningBanner}" Visibility="{Binding IsGameRunning, Converter={StaticResource BoolToVis}}">
+                <TextBlock TextWrapping="Wrap" Text="{l:Tr '游戏正在运行：请先退出游戏再写入存档（游戏运行中改存档会被游戏覆盖）。', 'The game is running: quit it before writing the save (the game would overwrite the changes).'}" />
+            </Border>
+            <Border Style="{StaticResource WarningBanner}" Visibility="{Binding HasLoadError, Converter={StaticResource BoolToVis}}">
+                <TextBlock TextWrapping="Wrap" Text="{Binding LoadError}" />
+            </Border>
+            <Border Style="{StaticResource InfoBanner}" Visibility="{Binding SteamCloudEnabled, Converter={StaticResource BoolToVis}}">
+                <TextBlock TextWrapping="Wrap"
+                           Text="{l:Tr '这个存档开启了 Steam 云同步。修改后下次启动游戏时 Steam 一般会上传本地的新存档；如果弹出存档冲突，请选择“本地”。', 'Steam Cloud is on for this save. After editing, Steam usually uploads the new local save the next time you start the game; if a conflict prompt appears, choose the local file.'}" />
+            </Border>
+        </StackPanel>
+
+        <DockPanel Grid.Row="2" Margin="0,0,0,12">
+            <TextBlock Text="{l:Tr '存档', 'Save'}" Style="{StaticResource FieldLabel}" />
+            <Button DockPanel.Dock="Right" Content="{l:Tr '打开备份文件夹', 'Open backup folder'}" Command="{Binding OpenBackupFolderCommand}" Style="{StaticResource ToolbarButton}" Margin="8,0,0,0" />
+            <Button DockPanel.Dock="Right" Content="{l:Tr '打开存档位置', 'Open save location'}" Command="{Binding OpenSaveFolderCommand}" Style="{StaticResource ToolbarButton}" Margin="8,0,0,0" />
+            <Button DockPanel.Dock="Right" Content="{l:Tr '重新读取', 'Reload'}" Command="{Binding ReloadCommand}" Style="{StaticResource ToolbarButton}" Margin="8,0,0,0" />
+            <ComboBox ItemsSource="{Binding Slots}" SelectedItem="{Binding SelectedSlot}" DisplayMemberPath="Display" />
+        </DockPanel>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="370" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <StackPanel IsEnabled="{Binding IsLoaded}">
+                        <TextBlock Text="{l:Tr '角色', 'Character'}" Style="{StaticResource SectionTitle}" Margin="0,0,0,6" />
+                        <TextBlock Style="{StaticResource Hint}" Margin="0,0,0,8">
+                            <Run Text="{l:Tr '名称：', 'Name: '}" /><Run Text="{Binding PlayerName, Mode=OneWay}" />
+                        </TextBlock>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="110" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="{l:Tr '等级', 'Level'}" Style="{StaticResource FieldLabel}" />
+                            <TextBox Grid.Row="0" Grid.Column="1" Margin="0,4" Text="{Binding LevelText, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding OriginalLevelText}" Style="{StaticResource Hint}" Margin="10,0,0,0" />
+
+                            <TextBlock Grid.Row="1" Text="{l:Tr '灵蕴', 'Will'}" Style="{StaticResource FieldLabel}" />
+                            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,4" Text="{Binding MoneyText, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding OriginalMoneyText}" Style="{StaticResource Hint}" Margin="10,0,0,0" />
+
+                            <TextBlock Grid.Row="2" Text="{l:Tr '当前经验', 'Current EXP'}" Style="{StaticResource FieldLabel}" />
+                            <TextBox Grid.Row="2" Grid.Column="1" Margin="0,4" Text="{Binding ExpText, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding OriginalExpText}" Style="{StaticResource Hint}" Margin="10,0,0,0" />
+
+                            <TextBlock Grid.Row="3" Text="{l:Tr '灵光点', 'Sparks'}" Style="{StaticResource FieldLabel}" />
+                            <TextBox Grid.Row="3" Grid.Column="1" Margin="0,4" Text="{Binding SparksText, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding OriginalSparksText}" Style="{StaticResource Hint}" Margin="10,0,0,0" />
+                        </Grid>
+                        <TextBlock Text="{Binding LevelLimitText}" Style="{StaticResource Hint}" Margin="0,6,0,0" />
+                        <TextBlock Text="{Binding TotalExpText}" Style="{StaticResource Hint}" Margin="0,4,0,0" />
+                        <CheckBox Content="{l:Tr '升级时按等级表补发灵光点', 'Grant Sparks for levels gained (level table)'}" IsChecked="{Binding GrantSparks}" Margin="0,6,0,0"
+                                  Visibility="{Binding HasLevelTable, Converter={StaticResource BoolToVis}}"
+                                  ToolTip="{l:Tr '游戏每升一级会发放灵光点；直接改等级不会自动发放。勾选后按等级表把应得的点数加到“灵光点”上。', 'The game grants Sparks on every level-up; editing the level directly does not. When ticked, the Sparks you would have earned (per the level table) are added.'}" />
+                        <TextBlock Text="{Binding SparksGrantText}" Style="{StaticResource Hint}" Margin="0,4,0,0" />
+                        <TextBlock Text="{Binding ProgressErrorText}" Foreground="#D13438" TextWrapping="Wrap" FontSize="12" Margin="0,6,0,0"
+                                   Visibility="{Binding HasProgressError, Converter={StaticResource BoolToVis}}" />
+                        <TextBlock Style="{StaticResource Hint}" Margin="0,6,0,0"
+                                   Text="{l:Tr '说明：“当前经验”是本级已获得的经验，不能超过升到下一级所需；改等级或经验时累计经验会自动同步。“灵光点”是未分配的点数。', 'Note: Current EXP is the EXP earned within the current level and cannot reach the amount needed for the next level; total EXP is synced automatically when you change level or EXP. Sparks are unspent points.'}" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                            <Button Content="{l:Tr '保存到存档', 'Save to file'}" Command="{Binding SaveCommand}" Style="{StaticResource ToolbarButton}" Padding="18,6" />
+                            <Button Content="{l:Tr '放弃修改', 'Discard changes'}" Command="{Binding RevertCommand}" Style="{StaticResource ToolbarButton}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <TextBlock Text="{l:Tr '备份', 'Backups'}" Style="{StaticResource SectionTitle}" Margin="0,22,0,6" />
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,0,0,6"
+                               Text="{l:Tr '每次保存前自动生成。选中一项后可还原（还原前会再备份一次当前存档）。', 'Created automatically before every save. Select one to restore it (the current save is backed up again first).'}" />
+                    <ListBox ItemsSource="{Binding Backups}" SelectedItem="{Binding SelectedBackup}" Height="190">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,2">
+                                    <TextBlock Text="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding ReasonDisplay}" Style="{StaticResource Hint}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Content="{l:Tr '还原所选备份', 'Restore selected backup'}" Command="{Binding RestoreBackupCommand}" Style="{StaticResource ToolbarButton}" Margin="0,8,0,0" HorizontalAlignment="Left" />
+                </StackPanel>
+            </ScrollViewer>
+
+            <DockPanel Grid.Column="2" IsEnabled="{Binding IsLoaded}">
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8" LastChildFill="True">
+                    <TextBlock DockPanel.Dock="Left" Text="{l:Tr '道具', 'Items'}" Style="{StaticResource SectionTitle}" Margin="0,0,12,0" VerticalAlignment="Center" />
+                    <CheckBox DockPanel.Dock="Right" Content="{l:Tr '只看已修改', 'Modified only'}" IsChecked="{Binding OnlyModified}" Margin="12,0,0,0" VerticalAlignment="Center" />
+                    <TextBox DockPanel.Dock="Right" Width="160" VerticalContentAlignment="Center"
+                             Text="{Binding ItemFilter, UpdateSourceTrigger=PropertyChanged}" ToolTip="{l:Tr '按 ID / 名称 / 类别筛选', 'Filter by ID / name / category'}" />
+                    <TextBlock DockPanel.Dock="Right" Text="{l:Tr '搜索', 'Search'}" Style="{StaticResource FieldLabel}" Margin="12,0,8,0" />
+                    <ComboBox DockPanel.Dock="Right" Width="170" VerticalAlignment="Center"
+                              ItemsSource="{Binding CategoryFilters}" SelectedIndex="{Binding CategoryFilterIndex}"
+                              AutomationProperties.Name="Category"
+                              ToolTip="{l:Tr '只显示某一类道具（例如只看种子、只看丹药）', 'Show only one category (for example only seeds or only pills)'}" />
+                    <TextBlock DockPanel.Dock="Right" Text="{l:Tr '类别', 'Category'}" Style="{StaticResource FieldLabel}" Margin="12,0,8,0" />
+                    <TextBlock Text="{Binding ItemsSummary}" Style="{StaticResource Hint}" />
+                </DockPanel>
+
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{l:Tr '新增道具', 'Add item'}" Style="{StaticResource FieldLabel}" Margin="0,0,8,0" />
+                        <ComboBox Width="300" IsEditable="True" IsTextSearchEnabled="True" StaysOpenOnEdit="True"
+                                  ItemsSource="{Binding AddableItems}" DisplayMemberPath="Display" TextSearch.TextPath="Display"
+                                  SelectedItem="{Binding SelectedAddable}"
+                                  Text="{Binding AddItemText, UpdateSourceTrigger=PropertyChanged}"
+                                  ToolTip="{l:Tr '输入道具名称（会自动补全）或道具 ID；也可以展开列表选择', 'Type an item name (auto-completes) or an item ID, or open the list to pick one'}">
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel />
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>
+                        </ComboBox>
+                        <TextBlock Text="{l:Tr '数量', 'Count'}" Style="{StaticResource FieldLabel}" Margin="12,0,8,0" />
+                        <TextBox Width="80" VerticalContentAlignment="Center" Text="{Binding AddItemCount, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Content="{l:Tr '添加', 'Add'}" Command="{Binding AddItemCommand}" Style="{StaticResource ToolbarButton}" Margin="12,0,0,0" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding AddItemPreview}" TextWrapping="Wrap" FontSize="12" Margin="0,6,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Opacity" Value="0.8" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding AddItemPreviewIsProblem}" Value="True">
+                                        <Setter Property="Foreground" Value="#D13438" />
+                                        <Setter Property="Opacity" Value="1" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,6,0,0"
+                               Text="{l:Tr '直接在表格里双击“数量”“仓储”修改；“名称”也可以双击改成自己的备注（保存在本机）。数量超过“上限”的会标红。“仓储”是在神龛休息时自动补进数量的存货。', 'Double-click Count or Storage in the table to edit; you can also double-click Name to set your own note (saved on this PC). Counts above Limit turn red. Storage is the reserve that refills the count when you rest at a shrine.'}" />
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,2,0,0" Text="{Binding GameDataText}" />
+                </StackPanel>
+
+                <DataGrid ItemsSource="{Binding ItemsView}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                          HeadersVisibility="Column" SelectionMode="Single" GridLinesVisibility="None">
+                    <DataGrid.RowStyle>
+                        <!-- 继承 Fluent 主题的行样式（ThemeMode 下用 {x:Type DataGridRow} 取到的是旧主题样式，深色时变成白底白字） -->
+                        <Style TargetType="DataGridRow" BasedOn="{StaticResource DefaultDataGridRowStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ExceedsCarryMax}" Value="True">
+                                    <Setter Property="Foreground" Value="#D13438" />
+                                    <Setter Property="ToolTip" Value="{l:Tr '数量超过了游戏里的携带上限：之后在游戏里捡不到、买不到这个道具，直到数量降到上限以下', 'The count exceeds the carry limit: you cannot pick up or buy this item in the game until the count drops below the limit'}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True" Width="70" />
+                        <DataGridTextColumn Header="{l:Tr '名称', 'Name'}" Binding="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="*" />
+                        <DataGridTextColumn Header="{l:Tr '类别', 'Category'}" Binding="{Binding Category}" IsReadOnly="True" Width="135" />
+                        <DataGridTextColumn Header="{l:Tr '原数量', 'Original'}" Binding="{Binding OriginalText}" IsReadOnly="True" Width="85" />
+                        <DataGridTextColumn Header="{l:Tr '数量', 'Count'}" Binding="{Binding Count, UpdateSourceTrigger=LostFocus}" Width="85" />
+                        <DataGridTextColumn Header="{l:Tr '仓储', 'Storage'}" Binding="{Binding StoreNum, UpdateSourceTrigger=LostFocus}" Width="80" />
+                        <DataGridTextColumn Header="{l:Tr '上限', 'Limit'}" Binding="{Binding CarryMaxText}" IsReadOnly="True" Width="60" />
+                        <DataGridCheckBoxColumn Header="{l:Tr '已改', 'Changed'}" Binding="{Binding IsModified, Mode=OneWay}" IsReadOnly="True" Width="85" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

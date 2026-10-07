@@ -1,0 +1,26 @@
+# build output
+bin/
+obj/
+.vs/
+*.user
+*.suo
+dist/
+
+# local-only: agent notes / dev log with personal environment details
+CLAUDE.md
+.claude/
+docs/PROGRESS.md
+docs/REQUIREMENTS.md
+
+# local-only: reverse-engineering notes and save samples (contain personal saves)
+research/
+
+# third-party mods and the game's own assemblies -- never redistributed
+test-mods/
+popular-mods/
+
+# official game artwork, used only for local builds (see src/WukongMM.App/WukongMM.App.csproj)
+src/WukongMM.App/Assets/Official/
+
+# backups of installed binaries
+mods/WukongMMDataExport/installed-*.dll

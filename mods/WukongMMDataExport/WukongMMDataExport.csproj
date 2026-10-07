@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    WukongMM 自带的游戏内 CSharpLoader mod：游戏加载角色后，把道具表与等级表导出到 <b1>\ModManager\GameData\
+    （items.json：ID → 当前语言名称、类型、携带上限、是否关卡道具、消耗品类型；levels.json：每级所需经验、升级灵光点），
+    供管理器的存档页显示道具名称并做数值校验。只读，不修改任何游戏数据。
+    依赖游戏 C# 程序集（GameDllDir）与 CSharpLoader 的 CSharpModBase/0Harmony，不进主解决方案。
+    构建：dotnet build -c Release   产物：bin\Release\net472\WukongMMDataExport.dll
+    安装：<b1>\Binaries\Win64\CSharpLoader\Mods\WukongMMDataExport\WukongMMDataExport.dll
+  -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <Deterministic>true</Deterministic>
+    <Version>0.3.0</Version>
+    <ModSdk Condition="'$(ModSdk)' == ''">$(MSBuildThisFileDirectory)..\..\test-mods\src\MyBlackMythWukongMods-master\CSharpMods\</ModSdk>
+    <GameDllDir Condition="'$(GameDllDir)' == ''">$(ModSdk)GameDll\</GameDllDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony"><HintPath>$(ModSdk)0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="CSharpModBase"><HintPath>$(ModSdk)CSharpModBase.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="BtlSvr.Main"><HintPath>$(GameDllDir)BtlSvr.Main.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Protobuf.RunTime"><HintPath>$(GameDllDir)Protobuf.RunTime.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Google.Protobuf"><HintPath>$(GameDllDir)Google.Protobuf.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnrealEngine"><HintPath>$(GameDllDir)UnrealEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnrealEngine.Runtime"><HintPath>$(GameDllDir)UnrealEngine.Runtime.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="b1.Native"><HintPath>$(GameDllDir)b1.Native.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="GSE.Core"><HintPath>$(GameDllDir)GSE.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="GSE.ProtobufDB"><HintPath>$(GameDllDir)GSE.ProtobufDB.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>
