@@ -1,4 +1,4 @@
-# 用户手册（WukongMM 1.0）
+﻿# 用户手册（WukongMM 1.0）
 
 [English](USER_GUIDE.en.md)
 
@@ -62,5 +62,8 @@
 - **按钮都是灰的**：游戏正在运行（右上角显示"游戏运行中"），退出游戏即可。
 - **游戏更新后**：重新进一次游戏读档，让导出 mod 更新数据表。存档格式变化时管理器会提示"结构无法识别"，此时不要修改。
 
-## 5. 命令行（高级）
+## 5. 更新
+新版本只在 GitHub 发布：设置页 → 关于 → **检查更新（打开 GitHub 发布页）**，或直接访问 https://github.com/aloneGtz/WukongMM/releases/latest 。下载新 zip 解压覆盖旧的 WukongMM.exe 即可（设置、备注、备份都不在程序目录里，不受影响）。问题反馈请到 GitHub Issues。
+
+## 6. 命令行（高级）
 `wmm.exe`（源码构建得到）：`wmm mods list|enable|disable|conflicts`、`wmm items`（列出可修改道具）、`wmm info <存档>`、`wmm apply <存档> ...`（与界面相同的规则、自动备份）、`wmm selftest`。

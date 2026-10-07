@@ -1,4 +1,4 @@
-# User guide (WukongMM 1.0)
+﻿# User guide (WukongMM 1.0)
 
 [中文](USER_GUIDE.md)
 
@@ -62,5 +62,8 @@ Without exported data the built-in table (matching game 1.0.21) is used, but ite
 - **All buttons are grey**: the game is running (top right shows "Game running"); quit the game.
 - **After a game update**: load a save once so the export mod refreshes the data tables. If the save format changed, the editor reports "unrecognized format" — do not edit then.
 
-## 5. Command line (advanced)
+## 5. Updates
+New versions are published on GitHub only: Settings → About → **Check for updates (open GitHub Releases)**, or visit https://github.com/aloneGtz/WukongMM/releases/latest. Extract the new zip over the old WukongMM.exe (settings, notes and backups live elsewhere and are kept). Please report problems on GitHub Issues.
+
+## 6. Command line (advanced)
 `wmm.exe` (built from source): `wmm mods list|enable|disable|conflicts`, `wmm items` (editable items), `wmm info <save>`, `wmm apply <save> ...` (same rules as the UI, automatic backup), `wmm selftest`.

@@ -36,7 +36,7 @@ The interface is available in **Chinese and English** (button at the top right).
 - For item names / categories in the save editor: [CSharpLoader](https://github.com/czastack/B1CSharpLoader) plus the bundled **WukongMMDataExport** mod (installed from the Settings page).
 
 ### Getting started
-1. Download `WukongMM-<version>-win-x64.zip` from [Releases](../../releases), extract it anywhere and run `WukongMM.exe`.
+1. Download `WukongMM-<version>-win-x64.zip` from [Releases](https://github.com/aloneGtz/WukongMM/releases/latest) (new versions are published here only), extract it anywhere and run `WukongMM.exe`.
 2. The game folder is detected automatically (otherwise: Settings → Game folder).
 3. Optional but recommended: install CSharpLoader, then Settings → **Install / update the export mod**, start the game and load a save once. For English item names, switch the game's text language to English and load a save once more.
 4. Quit the game before toggling mods or writing a save.
@@ -102,7 +102,7 @@ MIT — see [LICENSE](LICENSE). Background image and icon in this repository are
 - 写入前检查游戏未运行、文件未被改动、自检，**自动备份**并按游戏算法重算校验值；任意备份一键还原。
 
 ### 使用
-1. 从 [Releases](../../releases) 下载 `WukongMM-<版本>-win-x64.zip`，解压后运行 `WukongMM.exe`（需要 [.NET 10 桌面运行时](https://dotnet.microsoft.com/download/dotnet/10.0) x64）。
+1. 从 [Releases](https://github.com/aloneGtz/WukongMM/releases/latest) 下载 `WukongMM-<版本>-win-x64.zip`（新版本只在这里发布），解压后运行 `WukongMM.exe`（需要 [.NET 10 桌面运行时](https://dotnet.microsoft.com/download/dotnet/10.0) x64）。
 2. 自动找到游戏目录（找不到时到"设置"页指定）。
 3. 建议：先安装 [CSharpLoader](https://github.com/czastack/B1CSharpLoader)，再到"设置"页点**安装 / 更新导出 mod**，进一次游戏读档；想要英文道具名，把游戏文字语言切成英文再读一次档。
 4. 启停 mod、写存档前请先退出游戏。

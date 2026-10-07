@@ -32,7 +32,18 @@ public sealed class SettingsViewModel : ObservableObject
             Dialogs.OpenInExplorer(_main.Paths.ManagerData);
         }, () => _main.HasGame);
         InstallExportModCommand = new RelayCommand(InstallExportMod, () => _main.HasGame && BundledExportMod is not null && !_main.IsGameRunning);
+        OpenReleasesCommand = new RelayCommand(() => Dialogs.OpenUrl(ReleasesUrl));
+        OpenProjectCommand = new RelayCommand(() => Dialogs.OpenUrl(ProjectUrl));
     }
+
+    /// <summary>项目主页；新版本只在 GitHub Releases 发布（用户 2026-10-07 决定）。管理器自己不联网，只用浏览器打开。</summary>
+    public const string ProjectUrl = "https://github.com/aloneGtz/WukongMM";
+
+    public const string ReleasesUrl = ProjectUrl + "/releases/latest";
+
+    public RelayCommand OpenReleasesCommand { get; }
+
+    public RelayCommand OpenProjectCommand { get; }
 
     public RelayCommand InstallExportModCommand { get; }
 

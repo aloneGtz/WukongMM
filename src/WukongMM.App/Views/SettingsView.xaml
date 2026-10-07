@@ -40,6 +40,10 @@
 
             <TextBlock Text="{l:Tr '关于', 'About'}" Style="{StaticResource SectionTitle}" Margin="0,20,0,6" />
             <TextBlock Text="{Binding VersionText}" Style="{StaticResource Hint}" />
+            <WrapPanel Margin="0,6,0,0">
+                <Button Content="{l:Tr '检查更新（打开 GitHub 发布页）', 'Check for updates (open GitHub Releases)'}" Command="{Binding OpenReleasesCommand}" Style="{StaticResource ToolbarButton}" Margin="0,0,8,6" />
+                <Button Content="{l:Tr '项目主页 / 问题反馈', 'Project page / report a problem'}" Command="{Binding OpenProjectCommand}" Style="{StaticResource ToolbarButton}" Margin="0,0,8,6" />
+            </WrapPanel>
             <TextBlock Style="{StaticResource Hint}" Margin="0,4,0,0"
                        Text="{l:Tr '单机游戏辅助工具。修改存档有风险，请保留备份；本工具不会联网，也不会上传任何数据。', 'An offline helper for a single-player game. Editing saves is risky, so keep backups. This tool never goes online and uploads nothing.'}" />
         </StackPanel>
